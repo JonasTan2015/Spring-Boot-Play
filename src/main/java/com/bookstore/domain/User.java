@@ -115,6 +115,12 @@ public class User implements UserDetails{
 		// TODO Auto-generated method stub
 		return true;
 	}
+	public Set<UserRole> getUserRoles() {
+		return userRoles;
+	}
+	public void setUserRoles(Set<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
 	
 	
 	
