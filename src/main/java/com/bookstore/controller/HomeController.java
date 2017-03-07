@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,10 +28,16 @@ import com.bookstore.domain.security.Role;
 import com.bookstore.domain.security.UserRole;
 import com.bookstore.service.UserService;
 import com.bookstore.service.impl.UserSecurityService;
+import com.bookstore.utility.MailConstructor;
 import com.bookstore.utility.SecurityUtility;
 
 @Controller
 public class HomeController {
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	@Autowired
+	private MailConstructor mailConstructor;
 	
 	@Autowired
 	private  UserService userService;
@@ -95,7 +103,10 @@ public class HomeController {
 		userService.createPasswordResetToken(user, token);
 		
 		String appUrl="http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
-		SimpleMailMessage email= mailConstructor.constructResetTokenEmail(appUrl,request.getLocale(),token,)
+		SimpleMailMessage email= mailConstructor.constructResetTokenEmail(appUrl,request.getLocale(),token,user,password);
+		mailSender.send(email);
+		model.addAttribute("emailSent",true);
+		return "myAccount";
 	}
 	
 	@RequestMapping("/newUser")
@@ -117,6 +128,8 @@ public class HomeController {
 		Authentication authentication=new UsernamePasswordAuthenticationToken(userDetails,userDetails.getPassword(),userDetails.getAuthorities());
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		model.addAttribute("user",user);
 		model.addAttribute("classActiveEdit", true);
 		return "myProfile";
 		

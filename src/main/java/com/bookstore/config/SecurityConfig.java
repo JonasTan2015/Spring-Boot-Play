@@ -35,7 +35,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			"/js/**",
 			"/image/**",
 			"/",
-			"/myAccount"
+			"/newUser",
+			"/forgetPassword",
+			"/login",
+			"/fonts/**",
+			"/bookshelf",
+			"/bookDetail/**",
+			"/hours",
+			"/faq",
+			"/searchByCategory",
+			"/searchBook"
 	};
 	
 	protected void configure(HttpSecurity http) throws Exception{
